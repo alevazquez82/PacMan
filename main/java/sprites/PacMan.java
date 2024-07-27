@@ -88,8 +88,23 @@ public class PacMan implements ISpritesMethods{
             int x = (int) (this.x  / this.tileX);
             int y = (int) (this.y  / this.tileY);
             
-            this.velXY[0] = this.direcciones[this.pulsada][0];
-            this.velXY[1] = this.direcciones[this.pulsada][1];
+            Boolean colisionPulsada =  checkColisionLaberintoPulsada(x, y, matriz, sett);
+            Boolean colisionVelXY = checkColisionLaberintoVelXY(x, y, velXY, matriz, sett);
+            if(!colisionPulsada){
+                
+                this.avanzar = true;
+                this.pulsadaConfirmada = this.pulsada;
+                this.velXY[0] = this.direcciones[this.pulsada][0];
+                this.velXY[1] = this.direcciones[this.pulsada][1];
+                this.iniRad = this.direcciones[this.pulsada][2];
+                
+            }else if (!colisionVelXY){
+                
+                this.avanzar = true;
+                
+            }else{
+                this.avanzar = false;
+            }    
         }
         
         if (this.avanzar){
@@ -97,6 +112,21 @@ public class PacMan implements ISpritesMethods{
             this.x += this.velXY[0] * this.vel;
             this.y += this.velXY[1] * this.vel;
         }
+    }
+    
+    private Boolean checkColisionLaberintoPulsada(int x, int y, int[][] matriz, Settings sett){
+     
+        int velX = this.direcciones[this.pulsada][0];
+        int velY = this.direcciones[this.pulsada][1];
+        
+        if (x + velX < 0 || x + velX >= sett.laberinto.matriz[0].length) 
+            return false;
+        
+        if (matriz[y + velY][x + velX] == sett.laberinto.PARED){
+            return true;
+        }
+        
+        return false;
     }
     
     private int actualizaTeclado(Settings sett){

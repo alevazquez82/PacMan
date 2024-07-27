@@ -12,8 +12,14 @@ public interface ISpritesMethods extends ISpritesDraw{
  
     void actualiza(int[][] matriz, Settings sett);
     
-    default Boolean checkColisionLaberintoVelX(int x, int y, int[] velXY, int[][] matriz, Settings sett){
+    default Boolean checkColisionLaberintoVelXY(int x, int y, int[] velXY, int[][] matriz, Settings sett){
 
+        if (x + velXY[0] < 0 || x + velXY[0] >= sett.laberinto.matriz[0].length) 
+            return false;
+        
+        if (matriz[y + velXY[1]][x + velXY[0]] == sett.laberinto.PARED){
+            return true;
+        }
        return false;
        
     }

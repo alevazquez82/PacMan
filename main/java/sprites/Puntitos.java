@@ -50,7 +50,7 @@ public class Puntitos implements ISpritesDraw{
         if(this.gordos){
             
             g.setColor(new Color(rgb[3], rgb[4], rgb[5]));
-            //this.size += cambiarSizeGordos();
+            this.size += cambiarSizeGordos();
                     
         }else{
             
@@ -60,5 +60,16 @@ public class Puntitos implements ISpritesDraw{
         g.fillOval(this.x + CENTRO_X - RADIO, this.y + CENTRO_Y - RADIO, RADIO * 2, RADIO * 2);
     }
     
-    
+    private int cambiarSizeGordos(){
+        
+        if(reDimension > 0 && size >= INI_SIZE_GORDOS){
+            
+            reDimension = -1;
+            
+        }else if(reDimension < 0 && size <=1){
+            
+            reDimension = 1;
+        }
+        return reDimension;
+    }
 }
