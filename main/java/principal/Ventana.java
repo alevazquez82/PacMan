@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import settings.Settings;
+import sprites.Fantasma;
 import sprites.Pared;
 import sprites.Puntitos;
 import sprites.PacMan;
@@ -25,6 +26,7 @@ public class Ventana extends JPanel implements ActionListener, IResetControles{
     private ArrayList<Pared> pared;
     private ArrayList<Puntitos> puntitos;
     private PacMan pacman;
+    private Fantasma[] fantasma;
     
     private Timer timer;
     
@@ -53,6 +55,7 @@ public class Ventana extends JPanel implements ActionListener, IResetControles{
         pared = instancias.instanciarParedesLaberinto();
         puntitos = instancias.instanciarPuntitosLaberinto();
         pacman = instancias.instanciarPacMan();
+        fantasma = instancias.instanciarFantasmas(this);
         
         timer = new Timer((int) (2000 / 60) ,this);
         timer.start();
@@ -81,6 +84,13 @@ public class Ventana extends JPanel implements ActionListener, IResetControles{
         
         if (pacman !=null){
             pacman.dibuja(g, matriz, settings);
+        }
+        
+        for (int i = 0; i < settings.NUMERO_FANTASMAS; i++){
+            
+            if (fantasma[i] != null){
+                fantasma[i].dibuja(g, matriz, settings);
+            }
         }
         
     }

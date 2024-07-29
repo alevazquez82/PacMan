@@ -57,7 +57,10 @@ public class Puntitos implements ISpritesDraw{
             g.setColor(new Color(rgb[0], rgb[1], rgb[2]));
         }
         
-        g.fillOval(this.x + CENTRO_X - RADIO, this.y + CENTRO_Y - RADIO, RADIO * 2, RADIO * 2);
+        if(matriz[matrizY][matrizX] == sett.laberinto.PUNTITO ||
+                matriz[matrizY][matrizX] == sett.laberinto.PUNTITO_GORDO){
+            g.fillOval(this.x + CENTRO_X - RADIO, this.y + CENTRO_Y - RADIO, RADIO * 2, RADIO * 2); 
+        }
     }
     
     private int cambiarSizeGordos(){

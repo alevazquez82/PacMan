@@ -3,6 +3,7 @@ package principal;
 
 import java.util.ArrayList;
 import settings.Settings;
+import sprites.Fantasma;
 import sprites.PacMan;
 import sprites.Pared;
 import sprites.Puntitos;
@@ -18,6 +19,7 @@ public class Instancias {
     private ArrayList<Pared> pared = new ArrayList<>();
     private ArrayList<Puntitos> puntitos = new ArrayList<>();
     private PacMan pacman;
+    private Fantasma[] fantasma;
     
     public Instancias(Settings settings){
         
@@ -84,4 +86,22 @@ public class Instancias {
         return pacman;
         
     }
+    
+    public Fantasma[] instanciarFantasmas(Ventana ventana) {
+		
+		fantasma = new Fantasma[settings.NUMERO_FANTASMAS];
+		
+		for (int i = 0; i < settings.NUMERO_FANTASMAS; i ++) {
+			
+			int x = settings.getIniSprites()[i + 1][0];
+			int y = settings.getIniSprites()[i + 1][1];
+			int id = settings.getIniSprites()[i + 1][2];
+			int direcc = settings.getIniSprites()[i + 1][3];
+			
+			fantasma[i] = new Fantasma(x, y, settings.laberinto.TILE_X, settings.laberinto.TILE_Y,
+					id, direcc, ventana);
+		}
+		
+		return fantasma;
+	}
 }
