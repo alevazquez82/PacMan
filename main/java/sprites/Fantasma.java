@@ -1,12 +1,13 @@
 package sprites;
 
+import interfaces.IChooseRndDirection;
 import interfaces.ISpritesMethods;
 import java.awt.Color;
 import java.awt.Graphics;
 import principal.Ventana;
 import settings.Settings;
 
-public class Fantasma implements ISpritesMethods {
+public class Fantasma implements ISpritesMethods, IChooseRndDirection{
 
     private static Boolean estanAzules = false;
     private Boolean estaComido = false;
@@ -89,14 +90,72 @@ public class Fantasma implements ISpritesMethods {
        //drawPtosClaves(g);
     }
     
+
+private void drawSoloOjos(Graphics g) {
+
+		int radioOjo = 17;
+		int radioPupila = 8;
+
+		int ojoX = (int) (this.x + 3);
+		int ojoY = (int) (this.tileY / 4);
+		int centroX = (int) (this.tileX / 2);
+
+		// mover Pupilas para que miren hacia la direccion en la que van...
+		int cuantoMover = 5;
+		int vX = this.velXY[0] * cuantoMover;
+		int vY = this.velXY[1] * cuantoMover;
+
+		// Ojos (color blanco)
+		g.setColor(new Color(241, 241, 241));
+		g.fillArc(ojoX, this.y + ojoY, radioOjo, radioOjo, 0, 360);
+		g.fillArc(ojoX + centroX, this.y + ojoY, radioOjo, radioOjo, 0, 360);
+
+		// Pupilas (color negro)
+		int pupilaX = ojoX + (int) (radioOjo / 2) - (int) (radioPupila / 2);
+		int pupilaY = this.y + ojoY + (int) (radioOjo / 2) - (int) (radioPupila / 2);
+
+		g.setColor(new Color(9, 9, 9));
+		g.fillArc(pupilaX + vX, pupilaY + vY, radioPupila, radioPupila, 0, 360);
+		g.fillArc(pupilaX + centroX + vX, pupilaY + vY, radioPupila, radioPupila, 0, 360);
+	}
+
     @Override
     public void actualiza(int[][] matriz, Settings sett) {
-
+        
+        int perseguir = 999;
+        
+        if (this.x % this.tileX == 00 && this.y % this.tileY == 0 ){
+            
+            int x = (int) ((this.x / this.tileX));
+            int y = (int) ((this.y / this.tileY));
+        
+            Boolean colisionVelXY = checkColisionLaberintoVelXY(x, y, velXY, matriz, sett);
+        
+            if (!colisionVelXY){
+                
+                this.avanzar =true;
+                
+            }else {
+                
+                this.direccion = elegirOtraDireccionRND(otraDireccionRND, this.direccion);
+                cambiarVelXY();
+            }
+        }
+        
+        if (this.avanzar){
+            
+            this.x += this.velXY[0] * this.vel;
+            this.y += this.velXY[1] * this.vel;
+        }
     }
     
-     private void drawSoloOjos(Graphics g){
-         
-     }
+    private void cambiarVelXY(){
+        
+        this.velXY[0] = direcciones[this.direccion][0];
+        this.velXY[1] = direcciones[this.direccion][1];
+        this.avanzar = false;
+    }
+
 //Getters & Setters
     public Boolean getEstaComido() {
         return estaComido;
