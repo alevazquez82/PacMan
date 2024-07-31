@@ -5,6 +5,7 @@ import Audio.Sonidos;
 import interfaces.ISpritesMethods;
 import java.awt.Color;
 import java.awt.Graphics;
+import principal.Ventana;
 import settings.Settings;
 
 
@@ -38,6 +39,8 @@ public class PacMan implements ISpritesMethods{
      private Boolean avanzar;
      
      private Sonidos waka = new Sonidos();
+     private Sonidos comePuntitoGordo = new Sonidos();
+     public static Sonidos mientrasAzules = new Sonidos();
 
     public PacMan(int x, int y, int tileX, int tileY, int dirPorDefecto) {
         super();
@@ -116,6 +119,9 @@ public class PacMan implements ISpritesMethods{
             
             this.x += this.velXY[0] * this.vel;
             this.y += this.velXY[1] * this.vel;
+            
+            //Escapatorias (izquierda/derecha)
+            this.x = escapatorias(this.x, sett.laberinto.matriz[0].length, this.tileX, this.pulsadaConfirmada);
         }
     }
     
@@ -139,11 +145,13 @@ public class PacMan implements ISpritesMethods{
         if (x < 0 || x >= sett.laberinto.matriz[0].length)
             return false;
         
-        if (matriz[y][x] == sett.laberinto.PUNTITO){
+        if (matriz[y][x] == sett.laberinto.PUNTITO || matriz[y][x] == sett.laberinto.PUNTITO_GORDO){
             
-            int acum = sett.laberinto.getContadorPuntitos();
-            sett.laberinto.setContadorPuntitos(acum - 1);
+            Boolean siEstanAzules = restarPuntitoOpuntitoGordo(matriz[y][x], sett);
             
+            if(siEstanAzules)
+                return false;
+                    
             matriz[y][x] = sett.laberinto.VACIO;
             sett.setPuntos(sett.getPuntos() + sett.SUMAR_PTOS_COME_PUNTITO);
             
@@ -155,6 +163,46 @@ public class PacMan implements ISpritesMethods{
             
         
         return false;
+    }
+    
+    private Boolean restarPuntitoOpuntitoGordo(int idPuntito, Settings sett){
+        
+        if (idPuntito == sett.laberinto.PUNTITO){
+            
+            int acum = sett.laberinto.getContadorPuntitos();
+            sett.laberinto.setContadorPuntitos(acum - 1);
+            return false;
+        }else if(idPuntito == sett.laberinto.PUNTITO_GORDO){
+            
+            //if(fantasma.getEstanAZules())return true;
+            
+            activarMiliSecFantasmasAzules(sett);
+            
+            int acum = sett.laberinto.getContadorPuntitosGordos();
+            sett.laberinto.setContadorPuntitosGordos(acum - 1);
+            
+            return false;     
+        }
+        
+        return false;
+    }
+    
+    private void activarMiliSecFantasmasAzules(Settings sett){
+        
+        if(Fantasma.getEstanAzules())
+            return;
+         
+         Fantasma.setEstanAzules(true);
+         Ventana.setMiliSec(System.currentTimeMillis());
+         System.out.println(Ventana.getMiliSec());
+         
+         comePuntitoGordo.cargarAudio(sett.urlaudio.getEatingGhost());
+         comePuntitoGordo.playSonido();
+         
+         mientrasAzules.cargarAudio(sett.urlaudio.getAzules());
+         mientrasAzules.playSonidoLoop();
+         
+         
     }
     
     private int actualizaTeclado(Settings sett){

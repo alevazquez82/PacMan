@@ -26,6 +26,16 @@ public interface ISpritesMethods extends ISpritesDraw{
      
     default int escapatorias(int x, int laberintoLength, int tileX, int direccion){
         
-        return 0;
+        if (x > laberintoLength * tileX && direccion == 0){
+            return -(tileX);
+        }
+        
+        if (x < - (tileX) && direccion == 1){
+            
+            return (laberintoLength -1) * tileX;
+        }    
+            
+        return x;
     }
+
 }

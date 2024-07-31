@@ -163,6 +163,9 @@ private void drawSoloOjos(Graphics g) {
             
             this.x += this.velXY[0] * this.vel;
             this.y += this.velXY[1] * this.vel;
+            
+            //Escapatorias(izquierda/derecha)
+            this.x = escapatorias(this.x, sett.laberinto.matriz[0].length, this.tileX, this.direccion);
         }
     }
     
@@ -189,8 +192,25 @@ private void drawSoloOjos(Graphics g) {
 		
 		return coorPac;
 	}
+        
+    public static void checkFinFantasmasAzules(Settings sett){
+        
+        if (!getEstanAzules()){
+            
+            return;
+        }
+        
+        long checkMiliSec = System.currentTimeMillis();
+        
+        if(Ventana.getMiliSec() + 7500 <= checkMiliSec){
+            
+            Fantasma.setEstanAzules(false);
+           if (PacMan.mientrasAzules.isRunning()){
+               PacMan.mientrasAzules.detenerSonido();
+           }
+        }
+    }    
 	
-    
     public int generarRND(int rango){
         return (int) (Math.random() * rango);
     }
@@ -234,6 +254,14 @@ private void drawSoloOjos(Graphics g) {
 
     public void setTileY(int tileY) {
         this.tileY = tileY;
+    }
+
+    public static Boolean getEstanAzules() {
+        return estanAzules;
+    }
+
+    public static void setEstanAzules(Boolean estanAzules) {
+        Fantasma.estanAzules = estanAzules;
     }
     
     
