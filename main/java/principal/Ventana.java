@@ -133,4 +133,16 @@ public class Ventana extends JPanel implements ActionListener, IResetControles{
         
     }
     
+    //Getters & Setters
+
+    public PacMan getPacman() {
+        return pacman;
+    }
+
+    public void setPacman(PacMan pacman) {
+        this.pacman = pacman;
+    }
+    
+    
+    
 }

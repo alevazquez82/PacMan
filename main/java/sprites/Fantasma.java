@@ -66,7 +66,7 @@ public class Fantasma implements ISpritesMethods, IChooseRndDirection{
         // Color 'estanAzules'
         int[] rgbAzules = {9, 75, 205};
         
-       // coorPacMan = getPacManPosition();
+       coorPacMan = getPacManPosition();
        actualiza(matriz, sett);
        
        if (!estanAzules){
@@ -128,6 +128,23 @@ private void drawSoloOjos(Graphics g) {
             
             int x = (int) ((this.x / this.tileX));
             int y = (int) ((this.y / this.tileY));
+            
+            for (int i = 0; i < ptosClave.length; i++){
+                
+                int pClaveX = ptosClave[i][0];
+                int pClaveY = ptosClave[i][1];
+                
+                if (x == pClaveX && y == pClaveY){
+                    
+                    perseguir = generarRND(100);
+                    
+                    if (perseguir < calcularMaxPercPerseguir(sett)){
+                      
+                        this.direccion = perseguirApacMan(this.x, this.y, coorPacMan[0], coorPacMan[1]);
+                        cambiarVelXY();   
+                    }
+                }
+            }
         
             Boolean colisionVelXY = checkColisionLaberintoVelXY(x, y, velXY, matriz, sett);
         
@@ -154,6 +171,28 @@ private void drawSoloOjos(Graphics g) {
         this.velXY[0] = direcciones[this.direccion][0];
         this.velXY[1] = direcciones[this.direccion][1];
         this.avanzar = false;
+    }
+    
+    public int calcularMaxPercPerseguir(Settings sett){
+        
+        int maxPercPerseguir = MIN_PERC_PERSEGUIR + sett.getNivel() * 4;
+        if (maxPercPerseguir > MAX_PERC_PERSEGUIR) maxPercPerseguir = MAX_PERC_PERSEGUIR;
+        
+        return maxPercPerseguir;
+    }
+    
+	public int[] getPacManPosition() {
+		
+		if (ventana.getPacman() == null) return new int[] {0, 0};
+		
+		int[] coorPac = { ventana.getPacman().getX(), ventana.getPacman().getY() };
+		
+		return coorPac;
+	}
+	
+    
+    public int generarRND(int rango){
+        return (int) (Math.random() * rango);
     }
 
 //Getters & Setters
